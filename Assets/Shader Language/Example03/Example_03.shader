@@ -57,9 +57,9 @@
                 return o;
             }
             
-            half4 frag(Input i) : SV_TARGET
+            half4 frag(Output o) : SV_TARGET
             {
-                half4 col=tex2D(_myTexture,i.uv);
+                half4 col=tex2D(_myTexture,o.uv);
                 col*=_myColor;
                 return col;
             }
