@@ -13,8 +13,8 @@
         // After multiplying the colors, they’re added together and the result is drawn (when opaque material Blend value is 1 0)
         // ZWriting is disabled. It writes its distance from the camera into texture to tell objects behind him not to draw over him which is not needed in Transparent material
         // object furthest away is rendered and then in order until the closest object is rendered last, but unity does that for us so we don’t have to worry about it
-        Blend SrcAlpha OneMinusSrcAlpha
         ZWrite off
+        Blend SrcAlpha OneMinusSrcAlpha
         
         Tags
         {

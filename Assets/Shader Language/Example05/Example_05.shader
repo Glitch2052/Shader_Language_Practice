@@ -2,8 +2,10 @@
 {
     Properties
     {
-        _myColor("Tint",Color)=(1,1,1,1)
+        [HDR]_myColor("Tint",Color)=(1,1,1,1)
         _MainTex("Texture",2D)="White" {}
+        _Dissolve("Noise Texture",2D)="Black"{}
+        _Amount("_Dissolve Amount",Range(0,1))=0
     }
     Subshader
     {
@@ -17,13 +19,14 @@
         Pass
         {
             CGPROGRAM
+            #include "UnityCG.cginc"
             #pragma vertex vert
             #pragma fragment frag
-            #include "UnityCG.cginc"
             
+            float _Amount;
             float4 _myColor;
             sampler2D _MainTex;
-            float4 _MainTex_ST;
+            sampler2D _Dissolve;
                 
             struct Input
             {
@@ -43,15 +46,20 @@
             {
                 Output o;
                 o.newPos=UnityObjectToClipPos(i.Pos);
-                o.uv=TRANSFORM_TEX(i.uv,_MainTex);
+                o.uv=i.uv;
                 o.color=i.color;
                 return o;
             }
             
             half4 frag(Output o) : SV_TARGET
             {
+                float dissolve = tex2D(_Dissolve,o.uv).r;
+                //dissolve = clamp(dissolve,0,1);
+                float dissolveValue = (dissolve - (_Amount));
+                clip(dissolveValue);
+                
                 float4 col=tex2D(_MainTex,o.uv);
-                col*=o.color;
+                col = (col * o.color)+_myColor*step(dissolveValue,0.075);
                 return col;
             }
             

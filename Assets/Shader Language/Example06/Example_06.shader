@@ -59,9 +59,11 @@
                 float4 sideCol=tex2D(_MainTex,uvSide);
                 float4 topCol=tex2D(_MainTex,uvTop);
                 
-               
+                // Makes Texture visible on both sides
                 weights = abs (weights);
+                // Makes Transisiton Between textures sharper
                 weights = pow(weights,60);
+                // Makes All Component Sum up to 1
                 weights = weights/(weights.x + weights.y + weights.z);
                 
                 frontCol *= weights.z;
